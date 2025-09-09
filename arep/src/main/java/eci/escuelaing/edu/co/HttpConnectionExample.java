@@ -14,11 +14,8 @@ public class HttpConnectionExample {
     private static final String GET_URL = "http://localhost:40000";
 
     public static String proceso(URI uri) throws IOException {
-        System.out.println("pruebaaaaa" + uri);
         URL obj = new URL(GET_URL + uri);
-        System.out.println("pruebaaaaa1" + obj);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        System.out.println("pruebaaaaa2" + con);
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
         
