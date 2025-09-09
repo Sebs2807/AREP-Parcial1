@@ -48,14 +48,15 @@ public class LlaveValor {
             String respuesta;
             if (uri.getPath().startsWith("/setkv")) {
                 String query = uri.getQuery().toString();
-                if(query.split("&")[0] == null || query.split("&")[1] == null){
-                    respuesta = "{ \"400 Bad Request\": \"" + "faltan key o value o no son string" + "\" }";
-                }else{
+                try {
                     String llave = query.split("&")[0].split("=")[1];
                     String valor = query.split("&")[1].split("=")[1];
                     store.put(llave, valor);
                     respuesta = "{ \"key\": \"" + llave + "\", \"value\": \"" + valor + "\", \"status\": \"almacenados exitosamente\" }";
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    respuesta = "{ \"400 Bad Request\": \"" + "faltan key o value o no son string" + "\" }";
                 }
+
                 outputLine = "HTTP/1.1 200 OK\r\n"
                 + "Content-Type: text/html\r\n"
                 + "\r\n"
