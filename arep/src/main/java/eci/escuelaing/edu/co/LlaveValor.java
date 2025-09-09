@@ -45,12 +45,17 @@ public class LlaveValor {
                 }
             }
             URI uri = new URI(path);
+            String respuesta;
             if (uri.getPath().startsWith("/setkv")) {
                 String query = uri.getQuery().toString();
-                String llave = query.split("&")[0].split("=")[1];
-                String valor = query.split("&")[1].split("=")[1];
-                store.put(llave, valor);
-                String respuesta = "{ \"key\": \"" + llave + "\", \"value\": \"" + valor + "\", \"status\": \"almacenados exitosamente\" }";
+                if(query.split("&")[0] == null || query.split("&")[1] == null){
+                    respuesta = "{ \"400 Bad Request\": \"" + "faltan key o value o no son string" + "\" }";
+                }else{
+                    String llave = query.split("&")[0].split("=")[1];
+                    String valor = query.split("&")[1].split("=")[1];
+                    store.put(llave, valor);
+                    respuesta = "{ \"key\": \"" + llave + "\", \"value\": \"" + valor + "\", \"status\": \"almacenados exitosamente\" }";
+                }
                 outputLine = "HTTP/1.1 200 OK\r\n"
                 + "Content-Type: text/html\r\n"
                 + "\r\n"
@@ -68,7 +73,10 @@ public class LlaveValor {
                 String query = uri.getQuery().toString();
                 String llave = query.split("=")[1];
                 String valor = store.get(llave);
-                String respuesta = "{ \"key\": \"" + llave + "\", \"value\": \"" + valor + "\"}";
+                respuesta = "{ \"key\": \"" + llave + "\", \"value\": \"" + valor + "\"}";
+                if(valor==null){
+                    respuesta = "{ \"error\": \"" + "key not found" + "\", \"key\": \"" + llave + "\"}";
+                }
                 outputLine = "HTTP/1.1 200 OK\r\n"
                         + "Content-Type: text/html\r\n"
                         + "\r\n"
